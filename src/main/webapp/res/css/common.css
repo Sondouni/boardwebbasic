@@ -1,0 +1,20 @@
+*{ padding: 0; margin: 0;}
+.container{
+    display: grid; grid-template-rows: 80px 1fr 40px; min-height: 100vh;
+}
+.container .header{
+    background-color: #e3bba4;
+}
+.container .footer{
+    color: darkgrey;
+    text-align: center;
+    font-size: 10px;
+    background-color: antiquewhite;
+}
+.container .body{
+    display: flex; align-items: center; justify-content: center;
+}
+.container .body .box{
+    display: flex; align-items: center; justify-content: center; border: 1px dashed; padding: 0 50px; height: 800px; width: 800px;
+    border-color: #e3bba4;
+}
