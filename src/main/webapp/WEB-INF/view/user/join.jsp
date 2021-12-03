@@ -6,7 +6,7 @@
         <div><input type="password" id="reupw" placeholder="password comfirm" required></div>
         <div><input type="text" name="nm" placeholder="name" required></div>
         <div>
-            <label>female<input type="radio" value="2" name="gender" checked></label>
+            <label>female<input type="radio" value="0" name="gender" checked></label>
             <label>male<input type="radio" value="1" name="gender"></label>
         </div>
         <div>

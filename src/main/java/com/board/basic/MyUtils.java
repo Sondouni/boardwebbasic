@@ -1,8 +1,11 @@
 package com.board.basic;
 
+import com.board.basic.user.model.UserEntity;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class MyUtils {
@@ -22,5 +25,17 @@ public class MyUtils {
             return Integer.parseInt(val);
         } catch (NumberFormatException e) {}
         return defVal;
+    }
+    public static UserEntity getLoginUser(HttpServletRequest req){
+        HttpSession session = req.getSession();
+        return  (UserEntity)session.getAttribute("loginUser");
+    }
+    public static int getLoginUserPK(HttpServletRequest req){
+        UserEntity entity = getLoginUser(req);
+        if(entity==null){
+            return 0;
+        }
+        return entity.getIuser();
+//        return entity==null?0:entity.getIuser();
     }
 }

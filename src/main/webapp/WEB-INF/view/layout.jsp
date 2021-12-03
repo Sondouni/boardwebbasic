@@ -1,4 +1,5 @@
 <%@ page isELIgnored="false" contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -10,7 +11,21 @@
 <body>
     <div class="container">
         <div class="header">
-
+            <h1>Hello!</h1>
+            <nav>
+                <ul class="topMenu">
+                        <li><a href="/board/list">board</a></li>
+                    <c:if test="${sessionScope.loginUser!=null}">
+                        <li><a href="/board/regmod">write</a></li>
+                        <li><a href="/user/logout">logOut</a></li>
+                        <li>${sessionScope.loginUser.uid}님 환영합니다!</li>
+                    </c:if>
+                    <c:if test="${sessionScope.loginUser==null}">
+                        <li><a href="/user/login">login</a> </li>
+                        <li><a href="/user/join">join</a> </li>
+                    </c:if>
+                </ul>
+            </nav>
         </div>
         <div class="body">
             <div class="box">

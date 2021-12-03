@@ -1,8 +1,8 @@
-package com.board.basic.user;
+package com.board.basic.board;
 
 import com.board.basic.MyUtils;
-import com.board.basic.dao.UserDAO;
-import com.board.basic.user.model.LoginResult;
+import com.board.basic.board.model.BoardEntity;
+import com.board.basic.dao.BoardDAO;
 import com.board.basic.user.model.UserEntity;
 
 import javax.servlet.ServletException;
@@ -13,32 +13,33 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet("/user/login")
-public class UserLoginServlet extends HttpServlet {
+@WebServlet("/board/regmod")
+public class BoardRegModServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        MyUtils.displayView("login","user/login",req,res);
+        MyUtils.displayView("write","board/regmod",req,res);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        UserEntity un = new UserEntity();
-        un.setUid(req.getParameter("uid"));
-        un.setUpw(req.getParameter("upw"));
-        System.out.println(un);
+        BoardEntity be = new BoardEntity();
+        be.setTitle(req.getParameter("title"));
+        be.setCtnt(req.getParameter("ctnt"));
+        be.setWriter(MyUtils.getLoginUserPK(req));
 
-        LoginResult lr = UserDAO.logIn(un);
-        System.out.println(lr.getResult());
-        System.out.println(lr.getLoginUser());
+        System.out.println(be.getTitle());
+        System.out.println(be.getCtnt());
+        System.out.println(be.getWriter());
 
-        switch (lr.getResult()){
+        int result = BoardDAO.insBoardWithPK(be);
+        System.out.println(be.getIboard());
+        //todo insert시 pk가 나왓을때 분기
+        switch (result){
             case 1:
-                HttpSession session = req.getSession();
-                session.setAttribute("loginUser",lr.getLoginUser());
-
                 res.sendRedirect("/board/list");
                 break;
             default:
+
                 break;
         }
     }
