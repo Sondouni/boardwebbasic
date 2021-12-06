@@ -33,6 +33,14 @@ public class UserJoinServlet extends HttpServlet {
         System.out.println(ue);
 
         int result = UserDAO.join(ue);
-        res.sendRedirect("login");
+        switch (result){
+            case 1:
+                res.sendRedirect("login");
+                break;
+            default:
+                req.setAttribute("err","fail to join");
+                doGet(req,res);
+                break;
+        }
     }
 }

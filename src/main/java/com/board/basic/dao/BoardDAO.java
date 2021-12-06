@@ -10,6 +10,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoardDAO {
+    //list limit를 걸어주는데, _,_에서 첫번째는 어디서부터 나타날지(startIdx), 몇개 나타날지(RowCnt)
+    public static int getMaxPageNum(BoardDTO dto){
+        Connection con = null;
+        PreparedStatement pr = null;
+        ResultSet rs = null;
+        String sql = " SELECT CEIL(COUNT(*)/?) from t_board ";
+        try {
+            con = DButils.getCon();
+            pr = con.prepareStatement(sql);
+            pr.setInt(1,dto.getRowCnt());
+            rs = pr.executeQuery();
+            if(rs.next()){
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            DButils.close(con,pr,rs);
+        }
+        return 0;
+    }
+
+    public static int chgBoard(BoardEntity vo){
+        Connection con = null;
+        PreparedStatement pr = null;
+        String sql = " UPDATE t_board set title = ?, ctnt = ?, mdt = now() where iboard = ? and writer = ? ";
+        try {
+            con = DButils.getCon();
+            pr = con.prepareStatement(sql);
+            pr.setString(1,vo.getTitle());
+            pr.setString(2,vo.getCtnt());
+            pr.setInt(3,vo.getIboard());
+            pr.setInt(4,vo.getWriter());
+            return pr.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            DButils.close(con,pr);
+        }
+        return 0;
+    }
 
     public static int delOne(BoardEntity dto){
         Connection con  = null;
@@ -36,7 +81,7 @@ public class BoardDAO {
         Connection con  = null;
         PreparedStatement pr = null;
         ResultSet rs = null;
-        String sql = " SELECT A.title,A.hit,A.ctnt,A.rdt,A.writer,B.uid as writerNm from t_board A Inner join t_user B On A.writer = B.iuser where iboard = ? ";
+        String sql = " SELECT A.title,A.hit,A.ctnt,A.rdt,A.writer,A.mdt,B.uid as writerNm from t_board A Inner join t_user B On A.writer = B.iuser where iboard = ? ";
         try {
             con = DButils.getCon();
             pr = con.prepareStatement(sql);
@@ -50,6 +95,7 @@ public class BoardDAO {
                         .ctnt(rs.getString("ctnt"))
                         .rdt(rs.getString("rdt"))
                         .writerNm(rs.getString("writerNm"))
+                        .mdt(rs.getString("mdt"))
                         .build();
             }
         } catch (SQLException e) {
@@ -161,7 +207,7 @@ public class BoardDAO {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String sql = " SELECT A.iboard,A.title,A.writer,A.hit,A.rdt,B.nm as writerNm "+
+        String sql = " SELECT A.iboard,A.title,A.writer,A.hit,A.rdt,A.mdt,B.nm as writerNm "+
                 " From t_board A "+
                 " INNER JOIN t_user B "+
                 " On A.writer = B.iuser "+
@@ -176,6 +222,7 @@ public class BoardDAO {
                         .writer(rs.getInt("writer"))
                         .hit(rs.getInt("hit"))
                         .rdt(rs.getString("rdt"))
+                        .mdt(rs.getString("mdt"))
                         .writerNm(rs.getString("writerNm"))
                         .build();
                 list.add(vo);

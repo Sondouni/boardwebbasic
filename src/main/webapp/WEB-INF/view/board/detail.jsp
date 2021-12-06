@@ -5,7 +5,7 @@
     <h1>${requestScope.data.title}</h1>
     <div class="article">
         <textarea rows="10" readonly>${requestScope.data.ctnt}</textarea>
-        <input type="text" value="${requestScope.data.rdt}" readonly>
+        <input type="text" value="${requestScope.data.rdt ne requestScope.data.mdt?requestScope.data.mdt:requestScope.data.rdt}" readonly>
         <input type="text" value="${requestScope.data.writerNm}" readonly>
         <input type="text" value="${requestScope.data.hit}" readonly>
     </div>

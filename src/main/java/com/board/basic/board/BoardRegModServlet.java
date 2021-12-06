@@ -1,7 +1,9 @@
 package com.board.basic.board;
 
 import com.board.basic.MyUtils;
+import com.board.basic.board.model.BoardDTO;
 import com.board.basic.board.model.BoardEntity;
+import com.board.basic.board.model.BoardVO;
 import com.board.basic.dao.BoardDAO;
 import com.board.basic.user.model.UserEntity;
 
@@ -17,7 +19,18 @@ import java.io.IOException;
 public class BoardRegModServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        MyUtils.displayView("write","board/regmod",req,res);
+        String title = "write";
+        int iboard = MyUtils.getParameterInt(req,"iboard");
+        if(iboard>0){
+            if(req.getParameter("data")==null) {
+                title = "change";
+                BoardDTO dto = new BoardDTO();
+                dto.setIboard(iboard);
+                BoardVO vo = BoardDAO.selOne(dto);
+                req.setAttribute("data", vo);
+            }
+        }
+        MyUtils.displayView(title,"board/regmod",req,res);
     }
 
     @Override
@@ -30,17 +43,36 @@ public class BoardRegModServlet extends HttpServlet {
         System.out.println(be.getTitle());
         System.out.println(be.getCtnt());
         System.out.println(be.getWriter());
-
-        int result = BoardDAO.insBoardWithPK(be);
+        int result=0;
+        int iboard = MyUtils.getParameterInt(req,"iboard");
+        if(iboard>0){
+            be.setIboard(iboard);
+            be.setWriter(MyUtils.getLoginUserPK(req));
+            result = BoardDAO.chgBoard(be);
+        }else if(iboard==0){
+            result = BoardDAO.insPK(be);
+        }
+        /*
+        if("change".equals(req.getParameter("submit"))){
+            be.setIboard(MyUtils.getParameterInt(req,"iboard"));
+            result = BoardDAO.chgBoard(be);
+        }else {
+            result = BoardDAO.insBoardWithPK(be);
+        }
+         */
         System.out.println(be.getIboard());
         //todo insert시 pk가 나왓을때 분기
         switch (result){
             case 1:
-                res.sendRedirect("/board/list");
-                break;
+                if(be.getIboard()!=0){
+                    res.sendRedirect("/board/detail?iboard="+be.getIboard());
+                    return;
+                }
             default:
-
-                break;
+                req.setAttribute("err","fail");
+                req.setAttribute("data",be);
+                doGet(req,res);
+                return;
         }
     }
 }

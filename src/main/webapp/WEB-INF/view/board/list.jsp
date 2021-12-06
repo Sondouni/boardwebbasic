@@ -16,7 +16,7 @@
             <td><c:out value="${item.title}"/></td>
             <td><c:out value="${item.hit}"/></td>
             <td><c:out value="${item.writerNm}"/></td>
-            <td><c:out value="${item.rdt}"/></td>
+            <td><c:out value="${item.rdt ne item.mdt? item.mdt:item.rdt}"/></td>
         </tr>
         </c:forEach>
     </table>

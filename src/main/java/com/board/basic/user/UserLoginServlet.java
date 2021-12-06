@@ -35,11 +35,24 @@ public class UserLoginServlet extends HttpServlet {
             case 1:
                 HttpSession session = req.getSession();
                 session.setAttribute("loginUser",lr.getLoginUser());
-
                 res.sendRedirect("/board/list");
-                break;
+                return;
             default:
-                break;
+                String err = null;
+                switch (lr.getResult()){
+                    case 0:
+                        err="fail to login";
+                        break;
+                    case 2:
+                        err="check your id";
+                        break;
+                    case 3:
+                        err="check your pw";
+                        break;
+                }
+                req.setAttribute("err",err);
+                doGet(req,res);
+                return;
         }
     }
 }

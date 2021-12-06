@@ -8,4 +8,11 @@ import lombok.Setter;
 @Setter
 public class BoardDTO {
     private int iboard;
+    private int page;
+    private int startIdx;
+    private int rowCnt;
+
+    public void setPage(int page){
+        this.page = page;
+    }
 }

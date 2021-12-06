@@ -20,6 +20,14 @@ public class BoardDeleteServlet extends HttpServlet {
         entity.setIboard(MyUtils.getParameterInt(req,"iboard"));
         entity.setWriter(MyUtils.getLoginUserPK(req));
         int result = BoardDAO.delOne(entity);
-        res.sendRedirect("/board/list");
+        switch (result){
+            case 1:
+                res.sendRedirect("/board/list");
+                return;
+            default:
+                req.setAttribute("err","fail to delete");
+                req.getRequestDispatcher("/board/detail?iboard="+MyUtils.getParameterInt(req,"iboard")).forward(req,res);
+                return;
+        }
     }
 }
