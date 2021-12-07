@@ -4,3 +4,9 @@ function moveToDetail(iboard,writer){
         location.href = "/board/detail?iboard="+iboard+"&writer="+writer;
     }
 }
+let list = document.querySelector('#boardTable');
+
+function replace(str){
+    return str.replaceAll();
+}
+

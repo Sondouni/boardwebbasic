@@ -11,8 +11,12 @@ public class BoardDTO {
     private int page;
     private int startIdx;
     private int rowCnt;
+    private int searchType;
+    private String searchText;
+
 
     public void setPage(int page){
+        this.startIdx = (page-1)*rowCnt;
         this.page = page;
     }
 }

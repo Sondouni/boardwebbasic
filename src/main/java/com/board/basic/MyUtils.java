@@ -17,6 +17,10 @@ public class MyUtils {
     public static void disForward(HttpServletRequest req,HttpServletResponse res, String jsp)throws ServletException,IOException{
         req.getRequestDispatcher("/WEB-INF/view/"+jsp+".jsp").forward(req,res);
     }
+    public static int getParameterInt(HttpServletRequest req,String str,int defVal){
+        return parseStringToInt(req.getParameter(str),defVal);
+    }
+
     public static int getParameterInt(HttpServletRequest req,String str){
         return parseStringToInt(req.getParameter(str),0);
     }

@@ -15,7 +15,7 @@ public class BoardDAO {
         Connection con = null;
         PreparedStatement pr = null;
         ResultSet rs = null;
-        String sql = " SELECT CEIL(COUNT(*)/?) from t_board ";
+        String sql = " SELECT CEIL(COUNT(*)/?) from t_board A INNER JOIN t_user B ON A.writer = B.iuser "+getSearchWhereString(dto);
         try {
             con = DButils.getCon();
             pr = con.prepareStatement(sql);
@@ -32,6 +32,25 @@ public class BoardDAO {
             DButils.close(con,pr,rs);
         }
         return 0;
+    }
+
+    private static String getSearchWhereString(BoardDTO dto){
+        if(dto.getSearchText()!=null&&!"".equals(dto.getSearchText())){
+            switch (dto.getSearchType()){
+                case 1:
+                    return String.format(" where title LIKE '%%%s%%' ",dto.getSearchText());
+                case 2:
+                    return String.format(" where ctnt LIKE '%%%s%%' ",dto.getSearchText());
+                case 3:
+                    return String.format(" where title LIKE '%%%s%%' or ctnt LIKE '%%%s%%' ",dto.getSearchText(),dto.getSearchText());
+                case 4:
+                    return String.format(" where B.nm LIKE '%%%s%%' ",dto.getSearchText());
+                case 5:
+                    return String.format(" where title LIKE '%%%s%%' or ctnt LIKE '%%%s%%' or B.nm LIKE '%%%s%%' "
+                            ,dto.getSearchText(),dto.getSearchText(),dto.getSearchText());
+            }
+        }
+        return "";
     }
 
     public static int chgBoard(BoardEntity vo){
@@ -202,7 +221,7 @@ public class BoardDAO {
         }
         return 0;
     }
-    public static List<BoardVO> selBoardList(){
+    public static List<BoardVO> selBoardList(BoardDTO dto){
         List<BoardVO> list = new ArrayList();
         Connection con = null;
         PreparedStatement ps = null;
@@ -211,10 +230,14 @@ public class BoardDAO {
                 " From t_board A "+
                 " INNER JOIN t_user B "+
                 " On A.writer = B.iuser "+
-                " ORDER BY A.iboard DESC ";
+                getSearchWhereString(dto)+
+                " ORDER BY A.iboard DESC "+
+                " LIMIT ?,? ";
         try {
             con = DButils.getCon();
             ps = con.prepareStatement(sql);
+            ps.setInt(1,dto.getStartIdx());
+            ps.setInt(2,dto.getRowCnt());
             rs = ps.executeQuery();
             while (rs.next()){
                 BoardVO vo = BoardVO.builder().iboard(rs.getInt("iboard"))

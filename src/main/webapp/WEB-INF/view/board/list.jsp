@@ -1,24 +1,67 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<link rel="stylesheet" href="/res/css/board/list.css">
-<div>
-    <table id="boardTable">
-        <tr>
-            <th>no</th>
-            <th>title</th>
-            <th>hits</th>
-            <th>writer</th>
-            <th>reg-datetime</th>
-        </tr>
-        <c:forEach items="${requestScope.list}" var = "item">
-        <tr class="record" onclick="moveToDetail(${item.iboard},${item.writer})";>
-            <td><c:out value="${item.iboard}"/></td>
-            <td><c:out value="${item.title}"/></td>
-            <td><c:out value="${item.hit}"/></td>
-            <td><c:out value="${item.writerNm}"/></td>
-            <td><c:out value="${item.rdt ne item.mdt? item.mdt:item.rdt}"/></td>
-        </tr>
-        </c:forEach>
-    </table>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<link rel="stylesheet" href="/res/css/board/list.css?ver=4">
+<div class="list">
+    <div>
+        <form action="/board/list" method="get">
+            <div>
+                <select name="searchType">
+                    <option value="1" ${param.searchType==1?'selected':''}>title</option>
+                    <option value="2" ${param.searchType==2?'selected':''}>context</option>
+                    <option value="3" ${param.searchType==3?'selected':''}>title+context</option>
+                    <option value="4" ${param.searchType==4?'selected':''}>writer</option>
+                    <option value="5" ${param.searchType==5?'selected':''}>ALL</option>
+                </select>
+                <input type="search" name="searchText" value="<c:out value="${param.searchText}"/>"><input type="submit" value="search">
+            </div>
+        </form>
+    </div>
+    <c:choose>
+        <c:when test="${requestScope.maxPagenum==0}">
+            <script>
+                alert("there`s no write")
+            </script>
+        </c:when>
+        <c:otherwise>
+            <table id="boardTable">
+                <tr>
+                    <th>no</th>
+                    <th>title</th>
+                    <th>hits</th>
+                    <th>writer</th>
+                    <th>reg-datetime</th>
+                </tr>
+                <c:forEach items="${requestScope.list}" var = "item">
+
+                    <c:set var="eachTitle" value="${fn:replace(fn:replace(item.title,'>','&gt;'),'<','&lt;')}" />
+                        <c:if test="${param.searchType==1||param.searchType==3||param.searchType==5||param.searchType==4}">
+                        <c:set var="eachTitle" value="${fn:replace(eachTitle,param.searchText,'<mark>'+=param.searchText+='</mark>')}"/>
+                        </c:if>
+                    <c:set var="eachWriter" value="${fn:replace(fn:replace(item.writerNm,'>','&gt;'),'<','&lt;')}" />
+                        <c:if test="${param.searchType==5||param.searchType==4}">
+                    <c:set var="eachWriter" value="${fn:replace(eachWriter,param.searchText,'<mark>'+=param.searchText+='</mark>')}"/>
+                        </c:if>
+                    <tr class="record" onclick="moveToDetail(${item.iboard},${item.writer})";>
+                        <td><c:out value="${item.iboard}"/></td>
+                        <td>${eachTitle}</td>
+                        <td><c:out value="${item.hit}"/></td>
+                        <td>${eachWriter}</td>
+                        <td><c:out value="${item.rdt ne item.mdt? item.mdt:item.rdt}"/></td>
+                    </tr>
+                </c:forEach>
+            </table>
+            <div class="pageContainer">
+                <select>
+                    <option name="5" value="5">5</option>
+                    <option name="10" value="10">10</option>
+                </select>
+                <c:set var = "selectedPage" value="${param.page==null?1:param.page}"/>
+                    <c:forEach var = "maxPage" begin="1" end="${requestScope.maxPagenum}">
+                        <div><a href="/board/list?page=${maxPage}&searchType=${param.searchType}&searchText=${param.searchText}"><span class="${selectedPage == maxPage?'selected':''}"><c:out value="${maxPage}"/></span></a></div>
+                    </c:forEach>
+            </div>
+        </c:otherwise>
+    </c:choose>
 </div>
 <script src="/res/js/board/list.js"></script>
