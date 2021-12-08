@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/res/css/board/list.css?ver=4">
 <div class="list">
     <div>
-        <form action="/board/list" method="get">
+        <form action="/board/list" method="get" id="searchFrm">
             <div>
                 <select name="searchType">
                     <option value="1" ${param.searchType==1?'selected':''}>title</option>
@@ -14,6 +14,11 @@
                     <option value="5" ${param.searchType==5?'selected':''}>ALL</option>
                 </select>
                 <input type="search" name="searchText" value="<c:out value="${param.searchText}"/>"><input type="submit" value="search">
+                <select name="rowCnt" id="rowCnt1">
+                    <c:forEach var="num" begin="5" end="30" step="5">
+                        <option value="${num}" ${param.rowCnt==num?'selected':''}>${num}개</option>
+                    </c:forEach>
+                </select>
             </div>
         </form>
     </div>
@@ -52,16 +57,25 @@
                 </c:forEach>
             </table>
             <div class="pageContainer">
-                <select>
-                    <option name="5" value="5">5</option>
-                    <option name="10" value="10">10</option>
+                <form id="frmList">
+                <select name="rowCnt" id="rowCnt" >
+                    <c:forEach var="num" begin="5" end="30" step="5">
+                        <option value="${num}" ${param.rowCnt==num?'selected':''}>${num}</option>
+                    </c:forEach>
                 </select>
+                </form>
                 <c:set var = "selectedPage" value="${param.page==null?1:param.page}"/>
                     <c:forEach var = "maxPage" begin="1" end="${requestScope.maxPagenum}">
-                        <div><a href="/board/list?page=${maxPage}&searchType=${param.searchType}&searchText=${param.searchText}"><span class="${selectedPage == maxPage?'selected':''}"><c:out value="${maxPage}"/></span></a></div>
+                        <div><a href="/board/list?page=${maxPage}&searchType=${param.searchType}&searchText=${param.searchText}&rowCnt=${param.rowCnt}"><span class="${selectedPage == maxPage?'selected':''}"><c:out value="${maxPage}"/></span></a></div>
                     </c:forEach>
             </div>
         </c:otherwise>
     </c:choose>
 </div>
-<script src="/res/js/board/list.js"></script>
+<script src="/res/js/board/list.js?ver=3">
+    let rowCtnVal = document.querySelector('#rowCtn1');
+    console.log(rowCtnVal)
+    function rowCtnVal1(){
+        location.href = "/board/list?page=1&searchType=${param.searchType}&searchText=${param.searchText}&rowCnt="+rowCtnVal.value;
+    }
+</script>

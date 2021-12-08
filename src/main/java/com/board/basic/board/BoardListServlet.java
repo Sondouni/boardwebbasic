@@ -16,12 +16,11 @@ public class BoardListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         //search
-        String abcc = req.getParameter("abc");
         int searchType = MyUtils.getParameterInt(req,"searchType");
         String searchText = req.getParameter("searchText");
         //dto 세팅
         BoardDTO dto = new BoardDTO();
-        dto.setRowCnt(5);
+        dto.setRowCnt(MyUtils.getParameterInt(req,"rowCnt",5));
         dto.setSearchText(searchText);
         dto.setSearchType(searchType);
         int maxPagenum = BoardDAO.getMaxPageNum(dto);
