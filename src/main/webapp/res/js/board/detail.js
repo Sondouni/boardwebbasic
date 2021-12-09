@@ -17,6 +17,7 @@ function displayedAt(createdAt) {
     const years = days / 365
     return `${Math.floor(years)}년 전`
 }
+/*
 var timee = new Date().toString();
 console.log(new Date());
 console.log(timee);
@@ -39,13 +40,18 @@ console.log(changeCtnt.dataset.writer);
 var changeBtnList = document.querySelectorAll('.change');
 changeBtnList.forEach(function(item) {
     item.addEventListener('click', function(e) {
+        replaceModForm();
+
         var commentBoxElem = e.target.parentElement;
         console.log(commentBoxElem);
         var changeCtntElem = commentBoxElem.querySelector('.changeCtnt');
-
+        console.log("박스안"+changeCtntElem.dataset.iboard);
+        var rdtElem = commentBoxElem.querySelector('.rdt');
         var frm = document.createElement('form');
-        frm.action = `/board/cmt/mod?icmt=${changeCtntElem.dataset.icmt}`;
+        frm.action = `/board/cmt/reg?icmt=${changeCtntElem.dataset.icmt}&iboard=${changeCtntElem.dataset.iboard}`;
         frm.method = 'post';
+        frm.className = "changeInput"
+        frm.style.width='200px';
 
         var inputCtnt = document.createElement('input');
         inputCtnt.type = 'text';
@@ -61,18 +67,51 @@ changeBtnList.forEach(function(item) {
         inputCancel.value = '취소';
 
         inputCancel.addEventListener('click', function() {
-            console.log('취소');
+            replaceModForm();
+            //location.href=`/board/detail?iboard=${changeCtntElem.dataset.iboard}`;
         });
 
         frm.append(inputCtnt);
         frm.append(inputSubmit);
         frm.append(inputCancel);
 
-        changeCtntElem.innerHTML = '';
-        changeCtntElem.append(frm);
+        changeCtntElem.remove();
+        rdtElem.insertAdjacentElement("beforebegin", frm);
     });
 });
+function replaceModForm() {
+    var changeInputElem = document.querySelector('.changeInput');
+    if(changeInputElem) {
+        var parent = changeInputElem.parentElement;
+        var ctnt = changeInputElem.ctnt.value;
+        changeInputElem.remove();
+
+        var navElem = document.createElement('nav');
+        navElem.className = 'changeCtnt';
+        navElem.innerText = ctnt;
+
+        var rdtElem = parent.querySelector('.rdt');
+        rdtElem.insertAdjacentElement('beforebegin', navElem);
+
+    }
+    console.log(changeInputElem);
+}
 
 function backOriginal(elem, ctnt) {
     elem.innerHTML = ctnt;
+}
+var cmtModContainerElem = document.querySelector('.cmtModContainer');
+var btnCancelElem = cmtModContainerElem.querySelector('#btnCancel');
+btnCancelElem.addEventListener('click',function (){
+    cmtModContainerElem.style.display = 'none';
+})
+function openModForm(icmt,ctnt){
+    if(cmtModContainerElem){
+        cmtModContainerElem.style.display = 'flex';
+        var cmtModFrmElem = cmtModContainerElem.querySelector('#cmtModFrm');
+        cmtModFrmElem.icmt.value = icmt;
+        cmtModFrmElem.ctnt.value = ctnt;
+    }
+    console.log('icmt : '+icmt);
+    console.log('ctnt : '+ctnt);
 }

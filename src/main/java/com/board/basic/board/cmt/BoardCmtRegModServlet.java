@@ -35,7 +35,14 @@ public class BoardCmtRegModServlet extends HttpServlet {
         entity.setIboard(MyUtils.getParameterInt(req,"iboard"));
         entity.setCtnt(req.getParameter("ctnt"));
         entity.setWriter(MyUtils.getLoginUserPK(req));
-        int result = BoardCmtDAO.insBoardCmt(entity);
+        int icmt = MyUtils.getParameterInt(req,"icmt");
+        int result = 0;
+        if(icmt>0){
+            entity.setIcmt(icmt);
+            result = BoardCmtDAO.updCmt(entity);
+        }else if(icmt==0){
+            result = BoardCmtDAO.insBoardCmt(entity);
+        }
         switch (result){
             case 1:
                 req.setAttribute("check","not null");

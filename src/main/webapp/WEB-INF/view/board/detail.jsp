@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<link rel="stylesheet" href="/res/css/board/detail.css?ver=2">
+<link rel="stylesheet" href="/res/css/board/detail.css?ver=3">
 <div class="article">
     <h1>${requestScope.data.title}</h1>
     <div class="article">
@@ -29,7 +29,7 @@
     </c:if>
     <!--todo : 수정, 시간표시 <개념정리 : 데이터셋, dom>-->
     <c:forEach items="${requestScope.cmtList}" var="item">
-        <div class="changeCtnt" id="commentBox">
+        <div class="commentBox" id="commentBox">
             <nav>${item.writerNm}</nav>
             <nav
                     id="navId_${item.icmt}"
@@ -38,17 +38,31 @@
                 data-iboard="${requestScope.data.iboard}"
                 data-icmt="${item.icmt}"
                 data-writer="${item.writer}"
-            >
-                    ${item.ctnt}
-            </nav>
-            <nav id="rdt">${item.rdt}</nav>
+            >${item.ctnt}</nav>
+            <nav class="rdt">${item.rdt}</nav>
             <input type="text" id="time">
             <c:if test="${item.writer==sessionScope.loginUser.iuser}">
-                <input type="button" value="change" class="change" >
+                <input type="button" value="change" class="change" onclick="openModForm(${item.icmt},'${item.ctnt}')" >
                 <input type="button" value="delete" onclick="isDel(${item.icmt},${requestScope.data.iboard})">
             </c:if>
         </div>
     </c:forEach>
     <div style="font-size: 10px">number of comment : ${requestScope.cmtList.size()}</div>
 </div>
-<script src="/res/js/board/detail.js"></script>
+<div class="cmtModContainer">
+    <div class="cmtModBody">
+        <form action="/board/cmt/reg" method="post" id="cmtModFrm">
+            <input type="hidden" name="icmt">
+            <input type="hidden" name="iboard" value="${requestScope.data.iboard}">
+            <div>
+                <input type="text" name="ctnt" value="" placeholder="content">
+            </div>
+            <div>
+            <input type="submit" value="change">
+            <input type="button" value="cancel" id="btnCancel">
+            </div>
+        </form>
+    </div>
+
+</div>
+<script src="/res/js/board/detail.js?ver=2"></script>

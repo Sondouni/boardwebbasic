@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class BoardCmtDTO {
     private int iboard;
+    private int writer;
     private int icmt;
 }

@@ -86,4 +86,24 @@ public class BoardCmtDAO {
         }
         return 0;
     }
+    public static int updCmt(BoardCmtEntity entity){
+        Connection con = null;
+        PreparedStatement pr = null;
+        String sql = " UPDATE t_board_cmt set ctnt = ? where icmt = ? and writer = ? ";
+        try {
+            con = DButils.getCon();
+            pr = con.prepareStatement(sql);
+            pr.setString(1,entity.getCtnt());
+            pr.setInt(2,entity.getIcmt());
+            pr.setInt(3,entity.getWriter());
+            return pr.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            DButils.close(con,pr);
+        }
+        return 0;
+    }
 }
