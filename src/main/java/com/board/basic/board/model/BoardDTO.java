@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class BoardDTO {
     private int iboard;
+    private int iuser;
     private int page;
     private int startIdx;
     private int rowCnt;

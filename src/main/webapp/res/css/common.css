@@ -50,6 +50,12 @@ a{
     display: flex; align-items: center; justify-content: center;
 }
 .container .body .box{
-    display: flex; align-items: center; justify-content: center; border: 1px dashed #e3bba4; padding: 0 50px; height: 800px; width: 800px;
+    display: flex; align-items: center; justify-content: center; border: 1px dashed #e3bba4; padding: 0 50px; height: 100%; width: 100%; margin: 100px;
 
+}
+.fav {
+    color: #f66e6e; font-size: 20px;
+}
+.fav i:hover {
+    cursor: pointer;
 }

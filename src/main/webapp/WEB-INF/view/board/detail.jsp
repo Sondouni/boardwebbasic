@@ -8,6 +8,10 @@
         <input type="text" value="${requestScope.data.rdt ne requestScope.data.mdt?requestScope.data.mdt:requestScope.data.rdt}" readonly>
         <input type="text" value="${requestScope.data.writerNm}" readonly>
         <input type="text" value="${requestScope.data.hit}" readonly>
+        <div>
+            <i class="fas fa-heart"></i>
+            x&nbsp;${requestScope.data.heartNum}
+        </div>
     </div>
     <div>
         <a href="/board/list"><input type="button" value="back"></a>
@@ -18,8 +22,21 @@
     </div>
     <div>
         <br>
-        <hr>
+        <hr style="width: 500px">
     </div>
+    <!-- todo <i class="far fa-thumbs-down"></i> 싫어요-->
+    <c:if test="${sessionScope.loginUser!=null}">
+        <div class="fav">
+            <c:choose>
+                <c:when test="${requestScope.isHeart==1}">
+                    <a href="/board/heart?proc=2&iboard=${requestScope.data.iboard}"><i class="fas fa-thumbs-up"></i></a>
+                </c:when>
+                <c:otherwise>
+                    <a href="/board/heart?proc=1&iboard=${requestScope.data.iboard}"><i class="far fa-thumbs-up"></i></a>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </c:if>
     <c:if test="${sessionScope.loginUser!=null}">
         <form action="/board/cmt/reg" method="post">
             <strong>comment</strong><input type="hidden" name="iboard" value="${requestScope.data.iboard}" >

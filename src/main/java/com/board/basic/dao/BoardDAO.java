@@ -3,6 +3,7 @@ package com.board.basic.dao;
 import com.board.basic.DButils;
 import com.board.basic.board.model.BoardDTO;
 import com.board.basic.board.model.BoardEntity;
+import com.board.basic.board.model.BoardHeartEntity;
 import com.board.basic.board.model.BoardVO;
 
 import java.sql.*;
@@ -107,6 +108,8 @@ public class BoardDAO {
             pr.setInt(1,dto.getIboard());
             rs = pr.executeQuery();
             if(rs.next()){
+                BoardHeartEntity entity = new BoardHeartEntity();
+                entity.setIboard(dto.getIboard());
                 vo = BoardVO.builder().iboard(dto.getIboard())
                         .writer(rs.getInt("writer"))
                         .title(rs.getString("title"))
@@ -115,6 +118,7 @@ public class BoardDAO {
                         .rdt(rs.getString("rdt"))
                         .writerNm(rs.getString("writerNm"))
                         .mdt(rs.getString("mdt"))
+                        .heartNum(BoardHeartDAO.selCountHeart(entity))
                         .build();
             }
         } catch (SQLException e) {

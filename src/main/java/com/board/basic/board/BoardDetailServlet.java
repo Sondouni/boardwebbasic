@@ -1,12 +1,10 @@
 package com.board.basic.board;
 
 import com.board.basic.MyUtils;
-import com.board.basic.board.model.BoardCmtDTO;
-import com.board.basic.board.model.BoardDTO;
-import com.board.basic.board.model.BoardEntity;
-import com.board.basic.board.model.BoardVO;
+import com.board.basic.board.model.*;
 import com.board.basic.dao.BoardCmtDAO;
 import com.board.basic.dao.BoardDAO;
+import com.board.basic.dao.BoardHeartDAO;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,6 +19,14 @@ public class BoardDetailServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         BoardDTO dto = new BoardDTO();
         dto.setIboard(MyUtils.getParameterInt(req,"iboard"));
+        //heart
+        int iuser = MyUtils.getLoginUserPK(req);
+        if (iuser>0){
+            BoardHeartEntity entity = new BoardHeartEntity();
+            entity.setIuser(iuser);
+            entity.setIboard(MyUtils.getParameterInt(req,"iboard"));
+            req.setAttribute("isHeart", BoardHeartDAO.selIsHeart(entity));
+        }
         //hit
         if((req.getParameter("check")==null)&&(MyUtils.getLoginUser(req)==null ||
                 MyUtils.getLoginUser(req).getIuser()!=MyUtils.getParameterInt(req,"writer"))){

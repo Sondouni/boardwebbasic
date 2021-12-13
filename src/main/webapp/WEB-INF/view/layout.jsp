@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${requestScope.title}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/res/css/common.css">
 </head>
 <body>
@@ -15,6 +16,8 @@
             <nav>
                 <ul class="topMenu">
                         <li><a href="/board/list">board</a></li>
+                        <li><a href="/board/rank?type=1">RankHits</a></li>
+
                     <c:if test="${sessionScope.loginUser!=null}">
                         <li><a href="/board/regmod">write</a></li>
                         <li><a href="/user/logout">logOut</a></li>

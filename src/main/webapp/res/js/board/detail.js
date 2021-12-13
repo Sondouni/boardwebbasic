@@ -25,9 +25,11 @@ console.log(document.getElementById('rdt').innerText);
 var rdt = document.querySelector('commentBox')
 document.getElementById('time').value = displayedAt(document.getElementById('rdt').innerText);
 
+/
+ */
 function isDel(icmt,iboard){
     if(confirm('Are you sure to delete?')){
-        location.href='board/cmt/del?icmt='+icmt+'&iboard='+iboard;
+        location.href='/board/cmt/del?icmt='+icmt+'&iboard='+iboard;
     }
 }
 /*
