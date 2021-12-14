@@ -79,7 +79,7 @@ public class BoardHeartDAO {
         Connection con  = null;
         PreparedStatement pr = null;
         ResultSet rs = null;
-        String sql = " SELECT COUNT(*) FROM t_board_heart WHERE iboard = ?;";
+        String sql = " SELECT COUNT(*) FROM t_board_heart WHERE iboard = ?";
         try {
             con  = DButils.getCon();
             pr = con.prepareStatement(sql);

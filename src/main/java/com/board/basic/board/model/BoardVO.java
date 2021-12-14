@@ -15,4 +15,7 @@ public class BoardVO {
     private String rdt;
     private String mdt;
     private int heartNum;
+    private int commentsNum;
+
+    private int cnt;
 }

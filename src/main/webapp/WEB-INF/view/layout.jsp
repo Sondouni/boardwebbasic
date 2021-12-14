@@ -17,9 +17,12 @@
                 <ul class="topMenu">
                         <li><a href="/board/list">board</a></li>
                         <li><a href="/board/rank?type=1">RankHits</a></li>
+                        <li><a href="/board/rank?type=2">RankHearts</a></li>
+                        <li><a href="/board/rank?type=3">RankComments</a></li>
 
                     <c:if test="${sessionScope.loginUser!=null}">
                         <li><a href="/board/regmod">write</a></li>
+                        <li><a href="/user/profile">myPage</a></li>
                         <li><a href="/user/logout">logOut</a></li>
                         <li>${sessionScope.loginUser.uid}님 환영합니다!</li>
                     </c:if>

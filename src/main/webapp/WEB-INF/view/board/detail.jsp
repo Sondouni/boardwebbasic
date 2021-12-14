@@ -9,7 +9,7 @@
         <input type="text" value="${requestScope.data.writerNm}" readonly>
         <input type="text" value="${requestScope.data.hit}" readonly>
         <div>
-            <i class="fas fa-heart"></i>
+            <i class="fas fa-heart" style="color: #e3bba4"></i>
             x&nbsp;${requestScope.data.heartNum}
         </div>
     </div>

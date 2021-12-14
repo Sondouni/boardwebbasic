@@ -1,0 +1,34 @@
+.rankContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.rankContainer h1{
+    color: black;
+    text-align: center;
+}
+#boardTable tr:not(:first-child):hover { background-color: #efefef; cursor: pointer;}
+
+.list{
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+.selected{
+    color: chocolate;
+}
+
+.pageContainer{
+    padding: 10px 50px; display: flex; justify-content: center;
+}
+.pageContainer div:not(:first-child){
+    margin-left: 8px;
+}
+#boardTable{
+    word-break: break-all;
+    width: 700px;
+    height: auto;
+}
+td{
+    text-align: center;
+}

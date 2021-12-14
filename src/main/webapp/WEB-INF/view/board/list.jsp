@@ -58,11 +58,13 @@
             </table>
             <div class="pageContainer">
                 <form id="frmList">
-                <select name="rowCnt" id="rowCnt" >
-                    <c:forEach var="num" begin="5" end="30" step="5">
-                        <option value="${num}" ${param.rowCnt==num?'selected':''}>${num}</option>
-                    </c:forEach>
-                </select>
+                    <input type="hidden" name="searchType" value="${param.searchType}">
+                    <input type="hidden" name="searchText" value="${param.searchText}">
+                    <select name="rowCnt" id="rowCnt" >
+                        <c:forEach var="num" begin="5" end="30" step="5">
+                            <option value="${num}" ${param.rowCnt==num?'selected':''}>${num}</option>
+                        </c:forEach>
+                    </select>
                 </form>
                 <c:set var = "selectedPage" value="${param.page==null?1:param.page}"/>
                     <c:forEach var = "maxPage" begin="1" end="${requestScope.maxPagenum}">
