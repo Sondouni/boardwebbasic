@@ -3,6 +3,8 @@ package com.board.basic.board;
 import com.board.basic.MyUtils;
 import com.board.basic.board.model.BoardDTO;
 import com.board.basic.dao.BoardDAO;
+import com.board.basic.dao.UserDAO;
+import com.board.basic.user.model.UserEntity;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,6 +26,10 @@ public class BoardListServlet extends HttpServlet {
         dto.setSearchText(searchText);
         dto.setSearchType(searchType);
         int maxPagenum = BoardDAO.getMaxPageNum(dto);
+
+        UserEntity entity = new UserEntity();
+        entity.setIuser(MyUtils.getLoginUserPK(req));
+        req.setAttribute("loginData", UserDAO.selUser(entity));
 
         req.setAttribute("maxPagenum",maxPagenum);
         dto.setPage(MyUtils.getParameterInt(req,"page",1));

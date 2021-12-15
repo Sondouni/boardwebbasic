@@ -51,7 +51,13 @@
                         <td><c:out value="${item.iboard}"/></td>
                         <td>${eachTitle}</td>
                         <td><c:out value="${item.hit}"/></td>
-                        <td>${eachWriter}</td>
+                        <c:set var="pImg" value="defualtProfile.png"/>
+                        <c:if test="${item.profileImg !=null}">
+                            <c:set var="pImg" value="profile/${sessionScope.loginUser.iuser}/${item.profileImg}"/>
+                        </c:if>
+                        <td>${eachWriter}&nbsp;&nbsp;<img class="profileImg" src = "/res/img/${pImg}">
+                            <img class="profileImg" src = "/res/img/${item.profileImg!=null?"profile/"+=sessionScope.loginUser.iuser+="/"+=item.profileImg:"defualtProfile.png"}">
+                        </td>
                         <td><c:out value="${item.rdt ne item.mdt? item.mdt:item.rdt}"/></td>
                     </tr>
                 </c:forEach>

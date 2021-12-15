@@ -11,12 +11,43 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAO {
+    public static UserEntity selUser(UserEntity entity){
+        Connection con = null;
+        PreparedStatement pr = null;
+        ResultSet rs = null;
+        String sql = " SELECT uid, nm, gender, rdt, profileImg from t_user where iuser = ? ";
+        try {
+            con = DButils.getCon();
+            pr = con.prepareStatement(sql);
+            pr.setInt(1,entity.getIuser());
+            rs = pr.executeQuery();
+            if(rs.next()){
+                UserEntity userEntity = new UserEntity();
+                userEntity.setUid(rs.getString("uid"));
+                userEntity.setNm(rs.getString("nm"));
+                userEntity.setGender(rs.getInt("gender"));
+                userEntity.setRdt(rs.getString("rdt"));
+                userEntity.setProfileImg(rs.getString("profileImg"));
+                return userEntity;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            DButils.close(con,pr,rs);
+        }
+        return null;
+    }
+
+
     public static LoginResult logIn(UserEntity param){
         Connection con = null;
         PreparedStatement pr = null;
         ResultSet rs = null;
         UserEntity un = new UserEntity();
-        String sql = " SELECT iuser, upw, nm, gender from t_user where uid = ? ";
+        String sql = " SELECT iuser, upw, nm, gender,profileImg from t_user where uid = ? ";
         try {
             con = DButils.getCon();
             pr = con.prepareStatement(sql);
@@ -29,6 +60,7 @@ public class UserDAO {
                     un.setNm(rs.getString("nm"));
                     un.setGender(rs.getInt("gender"));
                     un.setIuser(rs.getInt("iuser"));
+                    un.setProfileImg(rs.getString("profileImg"));
                     return new LoginResult(1,un);
                 }else {
                     return new LoginResult(3,un);
@@ -59,6 +91,34 @@ public class UserDAO {
             pr.setString(2,param.getUpw());
             pr.setString(3,param.getNm());
             pr.setInt(4,param.getGender());
+            return pr.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            DButils.close(con,pr);
+        }
+        return 0;
+    }
+    public static int updUser(UserEntity entity){
+        Connection con = null;
+        PreparedStatement pr = null;
+        String sql = " UPDATE t_user set ";
+        String changedVal = null;
+        if(entity.getUpw()!=null&&!"".equals(entity.getUpw())){
+            sql+= " upw = ? ";
+            changedVal = entity.getUpw();
+        }else if(entity.getProfileImg()!=null&&!"".equals(entity.getProfileImg())){
+            sql+= " profileImg = ? ";
+            changedVal = entity.getProfileImg();
+        }
+        sql += " Where iuser = ? ";
+        try {
+            con = DButils.getCon();
+            pr = con.prepareStatement(sql);
+            pr.setString(1,changedVal);
+            pr.setInt(2,entity.getIuser());
             return pr.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

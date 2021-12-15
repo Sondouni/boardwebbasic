@@ -64,7 +64,7 @@ a{
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 120px 1fr;
+    grid-template-columns: 150px 1fr;
 }
 .subContainer .subMenus{
     border-right: 1px solid #000000;
@@ -73,7 +73,7 @@ a{
     margin-bottom: 10px;
 }
 .subContainer .subBody{
-    padding: 0px 12px;
+    padding-left: 12px;
 }
 .myPageBox{
     width: 100%;

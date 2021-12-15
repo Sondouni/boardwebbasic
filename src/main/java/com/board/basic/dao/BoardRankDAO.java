@@ -119,18 +119,36 @@ public class BoardRankDAO {
         }
         return list;
     }
+    public static List<BoardVO> selHitCntList(){
+        String sql = " SELECT A.iboard,A.title,A.writer,A.hit as cnt,A.rdt,A.mdt,B.nm as writerNm from t_board A  "+
+                " INNER JOIN t_user B "+
+                " On A.writer = B.iuser "+
+                " where hit>0 "+
+                " order by hit desc, iboard desc limit 10 ";
+        return procResultSet(sql);
+    }
     public static List<BoardVO> selHeartCntList(){
-        List<BoardVO> list = new ArrayList();
+        String sql = " SELECT A.iboard,A.title,A.writer,A.rdt,B.nm AS writerNm, C.cnt FROM t_board A "+
+                " INNER JOIN t_user B "+
+                " ON A.writer = B.iuser "+
+                " INNER JOIN "+
+                "(SELECT iboard,COUNT(iuser) AS cnt FROM t_board_heart GROUP BY iboard) C "+
+                " ON A.iboard = C.iboard "+
+                " order by rank desc, A.iboard desc limit 10 ";
+        return procResultSet(sql);
+    }
+    public static List<BoardVO> selCmtCntList(){
         String sql = " SELECT A.iboard,A.title,A.writer,A.rdt,B.nm AS writerNm, C.cnt FROM t_board A "+
                 " INNER JOIN t_user B "+
                 " ON A.writer = B.iuser "+
                 " INNER JOIN "+
                 "(SELECT iboard,COUNT(icmt) AS cnt FROM t_board_cmt GROUP BY iboard) C "+
                 " ON A.iboard = C.iboard "+
-                "";
-        return list;
+                " order by rank desc, A.iboard desc limit 10 ";
+        return procResultSet(sql);
     }
-    public static void procResultSet(String sql,List<BoardVO> list){
+    public static List<BoardVO> procResultSet(String sql){
+        List<BoardVO> list = new ArrayList();
         Connection con = null;
         PreparedStatement pr = null;
         ResultSet rs = null;
@@ -142,7 +160,6 @@ public class BoardRankDAO {
                 BoardVO vo = BoardVO.builder().iboard(rs.getInt("iboard"))
                         .title(rs.getString("title"))
                         .writer(rs.getInt("writer"))
-                        .hit(rs.getInt("hit"))
                         .rdt(rs.getString("rdt"))
                         .mdt(rs.getString("mdt"))
                         .writerNm(rs.getString("writerNm"))
@@ -157,5 +174,6 @@ public class BoardRankDAO {
         } finally {
             DButils.close(con,pr,rs);
         }
+        return list;
     }
 }

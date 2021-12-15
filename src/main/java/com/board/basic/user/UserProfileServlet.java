@@ -1,6 +1,9 @@
 package com.board.basic.user;
 
+import com.board.basic.FileUtils;
 import com.board.basic.MyUtils;
+import com.board.basic.dao.UserDAO;
+import com.board.basic.user.model.UserEntity;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
@@ -18,6 +21,11 @@ import java.util.Enumeration;
 public class UserProfileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        int loginUserPk = MyUtils.getLoginUserPK(req);
+        UserEntity entity = new UserEntity();
+        entity.setIuser(loginUserPk);
+        req.setAttribute("data",UserDAO.selUser(entity));
+
         String title = "proFile";
         req.setAttribute("subPage","user/profile");
         MyUtils.displayView(title,"user/myPage",req,res);
@@ -28,19 +36,41 @@ public class UserProfileServlet extends HttpServlet {
         int loginUserPk = MyUtils.getLoginUserPK(req);
         int maxSize = 10_485_760; // 파일의 최대 크기를 정해줌, 1024*1024*10 10mb
 
-        ServletContext app = req.getServletContext();
-        String targetPath = app.getRealPath("/res/img/profile/"+loginUserPk); //톰켓이 들어있는 폴더에서, 경로를 더욱 추가 path=경로
+        ServletContext app = req.getServletContext(); // 어플리케이션 객체(servlet context의 객체, 이름이 어플리케이션이라 불림)
+        String targetPath = app.getRealPath("/res/img/profile/"+loginUserPk);//톰켓에서 돌아가는 프로젝트 root경로값을 문자열로 준다
+        //톰켓이 들어있는 폴더에서, 경로를 더욱 추가 path=경로
         String encoding = "UTF-8"; // 인코딩은 한글
 
-        File file = new File(targetPath);//폴더 생성
-        file.mkdirs();
+        //이미지파일이 하나만 등록되도록(전에 있던파일 삭제)
+        File targetFolder = new File(targetPath);//폴더 생성
+        if(targetFolder.exists()){
+            FileUtils.delFolderFiles(targetPath,false);
+        }else {
+            targetFolder.mkdirs();//mkdir는 경로중 하나라도 폴더가 없을시 에러가 터지지만, mkdirs는 폴더를 생성해준다다
+        }
 
         System.out.println("targetPath : "+targetPath);
         MultipartRequest mr = new MultipartRequest(req,targetPath,maxSize,encoding, new DefaultFileRenamePolicy());
         //mulitpartRequest를 생성하는데 필요한것 : req, 경로, 최대용량, 인코딩, 파일이름 중복시 처리해주는 객체
 
-        Enumeration files = mr.getFileNames();
-        String fileNm = (String)files.nextElement();
-        System.out.println("fileNm : "+fileNm);
+        Enumeration enumFiles = mr.getFileNames(); //ResultSet과 비슷한 개념,
+        String changedFileNm = mr.getOriginalFileName("profileImg");
+        /*
+        if(enumFiles.hasMoreElements()){
+            String originFileNm = (String)enumFiles.nextElement();
+            System.out.println("originFileNm : "+originFileNm);
+            String changedFileNm = mr.getOriginalFileName(originFileNm);
+            System.out.println("originFileNm : "+changedFileNm);
+            String changedFileNm1 =  mr.getFilesystemName(originFileNm);
+            System.out.println("changedFileNm : "+changedFileNm1);
+        }
+
+         */
+        UserEntity entity = new UserEntity();
+        entity.setIuser(MyUtils.getLoginUserPK(req));
+        entity.setProfileImg(changedFileNm);
+        int result = UserDAO.updUser(entity);
+        doGet(req,res);
+        //생성된 파일명을 얻어오는것.
     }
 }

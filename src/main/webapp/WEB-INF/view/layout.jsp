@@ -23,6 +23,7 @@
                     <c:if test="${sessionScope.loginUser!=null}">
                         <li><a href="/board/regmod">write</a></li>
                         <li><a href="/user/profile">myPage</a></li>
+                        <!-- 서브페이지를 가게된다면 그 서브페이지를 include하고있는 jsp까지 같이 가게됨-->
                         <li><a href="/user/logout">logOut</a></li>
                         <li>${sessionScope.loginUser.uid}님 환영합니다!</li>
                     </c:if>

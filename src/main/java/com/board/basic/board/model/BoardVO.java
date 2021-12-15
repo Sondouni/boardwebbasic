@@ -14,6 +14,7 @@ public class BoardVO {
     private int hit;
     private String rdt;
     private String mdt;
+    private String profileImg;
     private int heartNum;
     private int commentsNum;
 
