@@ -15,7 +15,7 @@ public class UserDAO {
         Connection con = null;
         PreparedStatement pr = null;
         ResultSet rs = null;
-        String sql = " SELECT uid, nm, gender, rdt, profileImg from t_user where iuser = ? ";
+        String sql = " SELECT uid, nm,upw, gender, rdt, profileImg from t_user where iuser = ? ";
         try {
             con = DButils.getCon();
             pr = con.prepareStatement(sql);
@@ -23,6 +23,7 @@ public class UserDAO {
             rs = pr.executeQuery();
             if(rs.next()){
                 UserEntity userEntity = new UserEntity();
+                userEntity.setUpw(rs.getString("upw"));
                 userEntity.setUid(rs.getString("uid"));
                 userEntity.setNm(rs.getString("nm"));
                 userEntity.setGender(rs.getInt("gender"));
@@ -77,6 +78,42 @@ public class UserDAO {
         }
         return new LoginResult(0,un);
     }
+
+    public static UserEntity selUserEntity(UserEntity entity){
+        Connection con = null;
+        PreparedStatement pr = null;
+        ResultSet rs = null;
+        UserEntity un = new UserEntity();
+        String sql = " SELECT * from t_user where ";
+        if(entity.getIuser()>0){
+            sql += "iuser = "+entity.getIuser();
+        }else {
+            sql += "uid = '"+entity.getUid() +"'";
+        }
+        try {
+            con=DButils.getCon();
+            pr = con.prepareStatement(sql);
+            rs = pr.executeQuery();
+            if(rs.next()){
+                un.setIuser(rs.getInt("iuser"));
+                un.setUid(rs.getString("uid"));
+                un.setUpw(rs.getString("upw"));
+                un.setNm(rs.getString("nm"));
+                un.setGender(rs.getInt("gender"));
+                un.setRdt(rs.getString("rdt"));
+                un.setProfileImg(rs.getString("profileImg"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+        }
+        return un;
+    }
+
+
+
     public static int join(UserEntity param){
         Connection con = null;
         PreparedStatement pr = null;

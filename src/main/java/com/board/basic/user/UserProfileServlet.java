@@ -6,6 +6,7 @@ import com.board.basic.dao.UserDAO;
 import com.board.basic.user.model.UserEntity;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -66,11 +67,14 @@ public class UserProfileServlet extends HttpServlet {
         }
 
          */
+
         UserEntity entity = new UserEntity();
         entity.setIuser(MyUtils.getLoginUserPK(req));
         entity.setProfileImg(changedFileNm);
+        entity.setUpw(BCrypt.hashpw((String)req.getAttribute("upw"),BCrypt.gensalt()));
         int result = UserDAO.updUser(entity);
-        doGet(req,res);
-        //생성된 파일명을 얻어오는것.
+        //doGEt을 하게된다면, 마지막에 동작한것이 post일때 새로고침을 하게되면 다시 post로 날리게 된다.(새로고침은 제일 마지막 동작을 한번 더 하는것)
+        //그래서 sendRediect 를 이용한다
+        res.sendRedirect("/user/profile");
     }
 }

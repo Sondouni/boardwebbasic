@@ -10,7 +10,7 @@ public class FileUtils {
     //폴더 아래 파일만 삭제
     public static void delFolderFiles(String path,boolean isDelFolder){
         File folder = new File(path);
-        if(folder.exists()){
+        if(folder.exists() && folder.isDirectory()){
             File[] filelist = folder.listFiles();
             if(filelist==null){return;}//폴더 아래에 파일이 없다는 의미
             for(File f:filelist){
@@ -20,7 +20,7 @@ public class FileUtils {
                     f.delete();
                 }
             }
+            if(isDelFolder){folder.delete();}
         }
-        if(isDelFolder){folder.delete();}
     }
 }

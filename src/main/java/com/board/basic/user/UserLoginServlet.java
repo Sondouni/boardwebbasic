@@ -4,6 +4,7 @@ import com.board.basic.MyUtils;
 import com.board.basic.dao.UserDAO;
 import com.board.basic.user.model.LoginResult;
 import com.board.basic.user.model.UserEntity;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,6 +32,29 @@ public class UserLoginServlet extends HttpServlet {
         System.out.println(lr.getResult());
         System.out.println(lr.getLoginUser());
 
+        String err = null;
+        //새로운 login 메소드 err 분기
+        /*
+        UserEntity userEntity = UserDAO.selUserEntity(un);
+        if(userEntity==null){
+            err = " check your id ";
+        }else {
+            String dbPw = userEntity.getUpw();
+            if(BCrypt.checkpw(un.getUpw(),dbPw)){
+                userEntity.setUpw(null);
+                HttpSession session = req.getSession();
+                session.setAttribute("login",userEntity);
+                res.sendRedirect("/board/list");
+                return;
+            }else {
+                err = " check your pw ";
+            }
+        }
+
+         */
+
+
+
         switch (lr.getResult()){
             case 1:
                 HttpSession session = req.getSession();
@@ -38,7 +62,6 @@ public class UserLoginServlet extends HttpServlet {
                 res.sendRedirect("/board/list");
                 return;
             default:
-                String err = null;
                 switch (lr.getResult()){
                     case 0:
                         err="fail to login";
