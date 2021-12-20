@@ -1,7 +1,7 @@
 function moveToDetail(iboard,writer){
     if(iboard){
         console.log('iboard : '+iboard)
-        location.href = "/board/detail?iboard="+iboard+"&writer="+writer;
+        location.href = "/board/detail2?iboard="+iboard+"&writer="+writer;
     }
 }
 let list = document.querySelector('#boardTable');
