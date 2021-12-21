@@ -50,11 +50,10 @@
 
     <!-- ajax 통신 -->
 
-    <div id="cmtListContainer"
-         style="display: flex; flex-direction:row"
-         data-iboard="${requestScope.data.iboard}"
-         data-iuser="${sessionScope.loginUser.iuser}"
-    >
+    <div id="cmtListContainer" style="display: flex; flex-direction:row" data-iboard="${requestScope.data.iboard}">
+        <div id="container" style="display: flex; flex-direction:column">
+
+        </div>
     </div>
 
 
@@ -65,18 +64,18 @@
 </div>
 <div class="cmtModContainer">
     <div class="cmtModBody">
-        <form  method="post" id="cmtModFrm" onsubmit="false" >
+        <form action="/board/cmt/reg" method="post" id="cmtModFrm">
             <input type="hidden" name="icmt">
             <input type="hidden" name="iboard" value="${requestScope.data.iboard}">
             <div>
                 <input type="text" name="ctnt" value="" placeholder="content">
             </div>
             <div>
-                <input type="submit" value="change">
-                <input type="button" value="cancel" id="btnCancel">
+            <input type="submit" value="change">
+            <input type="button" value="cancel" id="btnCancel">
             </div>
         </form>
     </div>
 
 </div>
-<script src="/res/js/board/detail2.js?ver=3"></script>
+<script src="/res/js/board/detail2.js?ver=2"></script>

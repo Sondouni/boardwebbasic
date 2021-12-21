@@ -2,6 +2,7 @@ package com.board.basic.board.cmt;
 
 import com.board.basic.MyUtils;
 import com.board.basic.board.model.BoardCmtDTO;
+import com.board.basic.board.model.BoardCmtEntity;
 import com.board.basic.board.model.BoardCmtVO;
 import com.board.basic.dao.BoardCmtDAO;
 import com.google.gson.Gson;
@@ -37,5 +38,26 @@ public class BoardCmtServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         //수정,삭제,등록
+
+        //proc로 수정,삭제,등록 분기
+        String proc = req.getParameter("proc");
+
+        String json = MyUtils.getJson(req);
+        Gson gson = new Gson();
+
+        BoardCmtEntity entity = gson.fromJson(json, BoardCmtEntity.class);
+        entity.setWriter(MyUtils.getLoginUserPK(req));
+
+        int result = 0;
+        switch (proc) {
+            case "upd":
+                result = BoardCmtDAO.updCmt(entity); // writer,icmt,ctnt
+                break;
+
+
+        }
+        res.setContentType("application/json");
+        PrintWriter out = res.getWriter();
+        out.print(String.format("{\"result\":%d}", result));
     }
 }
