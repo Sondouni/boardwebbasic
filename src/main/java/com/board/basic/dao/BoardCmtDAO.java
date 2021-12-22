@@ -5,28 +5,32 @@ import com.board.basic.board.model.BoardCmtDTO;
 import com.board.basic.board.model.BoardCmtEntity;
 import com.board.basic.board.model.BoardCmtVO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoardCmtDAO {
-    public static int insBoardCmt(BoardCmtEntity entity){
+    public static int insBoardCmt(BoardCmtEntity entity){//다음번부터 제대로 만들때는 resultset을 사용하자.,
+        int result = 0;
         Connection con = null;
         PreparedStatement pr = null;
+        ResultSet rs = null;
         String sql = " INSERT into t_board_cmt "+
                 " (iboard, ctnt, writer) "+
                 " values "+
                 " (?, ? ,? ) ";
         try {
             con = DButils.getCon();
-            pr = con.prepareStatement(sql);
+            pr = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pr.setInt(1,entity.getIboard());
             pr.setString(2,entity.getCtnt());
             pr.setInt(3,entity.getWriter());
-            return pr.executeUpdate();
+            result=pr.executeUpdate();
+            rs = pr.getGeneratedKeys();
+            if(rs.next()){
+                entity.setIcmt(rs.getInt(1));
+            }
+            return result;
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -34,7 +38,7 @@ public class BoardCmtDAO {
         } finally {
             DButils.close(con,pr);
         }
-        return 0;
+        return result;
     }
     public static List<BoardCmtVO> boardCmtList(BoardCmtDTO dto){
         List<BoardCmtVO> list = new ArrayList();

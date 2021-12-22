@@ -39,8 +39,10 @@
     </c:if>
 
     <c:if test="${sessionScope.loginUser!=null}">
-        <form action="/board/cmt/reg" method="post">
-            <strong>comment</strong><input type="hidden" name="iboard" value="${requestScope.data.iboard}" >
+        <form id="cmtNewForm"
+            data-writerid="${sessionScope.loginUser.nm}"
+        >
+            <strong>comment</strong>
             <input type="text" name="ctnt">
             <input type="submit" value="write">
         </form>

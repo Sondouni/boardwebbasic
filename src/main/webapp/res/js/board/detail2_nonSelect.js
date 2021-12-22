@@ -1,3 +1,46 @@
+//댓글달기 새댓글 추가를 위한 전역변수 편집
+var tableElem = document.createElement('table');
+
+function makeButton(tr,lastTd,icmt){
+    var btnMod = document.createElement('button');
+    btnMod.innerText = 'change';
+    btnMod.addEventListener('click',function (e){
+        tr.classList.add('cmt_selected');
+        var ctnt = tr.children[0].innerText;
+        openModForm(icmt,ctnt);//구조분해할당
+    });
+    var btnDel = document.createElement('button');
+    btnDel.addEventListener('click',function (e){
+        if(confirm('are you sure to delete this comment?')){
+            var url = '/board/cmt?proc=del';
+            var param = {
+                icmt : icmt // iboard를 안보내는 이유는 화면이동이 불필요
+            }
+            fetch(url,{
+                'method':'POST',
+                'headers':{'Content-Type':'application/json'},
+                'body':JSON.stringify(param)
+            }).then(function (res){
+                return res.json();
+            }).then(function (data){
+                switch (data.result){
+                    case 0:
+                        alert('fail to delete');
+                        break;
+                    case 1:
+                        alert('success to delete');
+                        tr.remove();
+                        break;
+                }
+            })
+        }
+    });
+    btnDel.innerText = 'delete';
+
+    lastTd.appendChild(btnMod);
+    lastTd.appendChild(btnDel);
+}
+
 //댓글달기 버튼
 
 var cmtNewFormElem = document.querySelector('#cmtNewForm');
@@ -32,7 +75,18 @@ newSubmitBtn.addEventListener('click',function (e){
                 getList();
                 cmtNewFormElem.ctnt.value = '';
                  */
-
+                var tr = document.createElement('tr');
+                var ctnt = cmtCtnt.replaceAll('<','&lt;').replaceAll('>','&gt;');
+                tr.innerHTML = `
+                    <td>${ctnt}</td>
+                    <td>${cmtNewFormElem.dataset.writerid}</td>
+                    <td>${new Date().toLocaleString()}</td>
+                `;
+                tableElem.insertBefore(tr,tableElem.children[1]);
+                var lastTd = document.createElement('td');
+                makeButton(tr,lastTd,null);
+                //todo icmt값을 구해주기,,
+                tr.appendChild(lastTd);
                 break;
         }
     })
@@ -114,7 +168,6 @@ function elt(name,attr){
 
 
 function setDisplay2(data){
-    var tableElem = document.createElement('table');
     var iuser = parseInt(`${cmtListContainerElem.dataset.iuser}`);
     var loginUserPk = cmtListContainerElem.dataset.iuser===''? 0 : Number(cmtListContainerElem.dataset.iuser);
     var iboard = parseInt(`${cmtListContainerElem.dataset.iboard}`);
@@ -139,62 +192,7 @@ function setDisplay2(data){
         tableElem.appendChild(tr);
         var lastTd = document.createElement('td');
         if(iuser===item.writer){
-            var btnMod = document.createElement('button');
-            btnMod.innerText = 'change';
-            btnMod.addEventListener('click',function (e){
-                tr.classList.add('cmt_selected');
-                var ctnt = tr.children[0].innerText;
-                openModForm(item.icmt,ctnt);//구조분해할당
-                /* 혼자해보는 수정/삭제
-                tr.innerHTML = `
-                    <form action="/board/cmt/mod" method="post">
-                        <td><input type="text" value="${ctnt}"></td>
-                        <td>${item.writerNm}</td>
-                        <td>${item.rdt}</td>
-                    </form>
-                 `;
-                var btnSub = document.createElement('button');
-                btnSub.addEventListener('submit',function (e){
-                    tr.innerHTML = `
-                                        <td>${ctnt}</td>
-                                        <td>${item.writerNm}</td>
-                                        <td>${item.rdt}</td>
-                                    `;
-                });
-                lastTd.appendChild(btnSub);
-
-                 */
-            });
-            var btnDel = document.createElement('button');
-            btnDel.addEventListener('click',function (e){
-               if(confirm('are you sure to delete this comment?')){
-                   var url = '/board/cmt?proc=del';
-                   var param = {
-                       icmt : item.icmt // iboard를 안보내는 이유는 화면이동이 불필요
-                   }
-                   fetch(url,{
-                       'method':'POST',
-                       'headers':{'Content-Type':'application/json'},
-                       'body':JSON.stringify(param)
-                   }).then(function (res){
-                       return res.json();
-                   }).then(function (data){
-                       switch (data.result){
-                           case 0:
-                               alert('fail to delete');
-                               break;
-                           case 1:
-                               alert('success to delete');
-                               tr.remove();
-                               break;
-                       }
-                   })
-               }
-            });
-            btnDel.innerText = 'delete';
-
-            lastTd.appendChild(btnMod);
-            lastTd.appendChild(btnDel);
+            makeButton(tr,lastTd,item.icmt);
         };
         tr.appendChild(lastTd);
 
