@@ -54,7 +54,8 @@ newSubmitBtn.addEventListener('click',function (e){
         return;
     }
     var param = {
-        'iboard': cmtListContainerElem.dataset.iboard, //밑에서 선언,초기화 되었어도, 이벤트 리스너이기때문에 상관없을듯?
+        'iboard': cmtListContainerElem.dataset.iboard,
+        //cmtListContainerElem이 밑에서 선언,초기화 되었어도, 이벤트 리스너이기때문에 상관없을듯?
         'ctnt' : cmtCtnt,
     }
     fetch(url,{
@@ -87,7 +88,6 @@ newSubmitBtn.addEventListener('click',function (e){
                 tableElem.insertBefore(tr,tableElem.children[1]);
                 var lastTd = document.createElement('td');
                 makeButton(tr,lastTd,data.icmt);
-                //todo icmt값을 구해주기,,
                 tr.appendChild(lastTd);
                 cmtNewFormElem.ctnt.value = '';
                 break;
@@ -150,6 +150,7 @@ function getList(){
     fetch(url).then(function(res){
         return res.json();
     }).then(function(data){
+        console.log(data);
         setDisplay2(data);
     });
 }

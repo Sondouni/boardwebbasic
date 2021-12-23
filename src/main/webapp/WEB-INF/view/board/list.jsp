@@ -59,6 +59,7 @@
                             <img class="profileImg" src = "/res/img/${item.profileImg!=null?"profile/"+=sessionScope.loginUser.iuser+="/"+=item.profileImg:"defualtProfile.png"}">
                         </td>
                         <td><c:out value="${item.rdt ne item.mdt? item.mdt:item.rdt}"/></td>
+                        <td><c:out value="${changedTime > centerTime? item.rdt:item.rdt+='new!'}"/></td>
                     </tr>
                 </c:forEach>
             </table>
